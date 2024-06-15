@@ -72,7 +72,7 @@ namespace Simlan {
         case '\0':
             return Token{Src->GetSourceInfo(), ETokenType::S_End};
         default:
-            return Token{Src->GetSourceInfo()};
+            return Token{Src->GetSourceInfo(), ETokenType(c)};
         }
     }
     void Lexer::SkipWhitespace(){
