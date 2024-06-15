@@ -1,0 +1,11 @@
+// One-line comment
+/*
+Multiline comment <line 1>
+Multiline comment <line 2>
+...
+Multiline comment <line n>
+*/
+10_2345_6789.0000_0000_1
+"string"
+true
+$TEST_
