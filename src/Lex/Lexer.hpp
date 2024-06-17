@@ -1,7 +1,10 @@
-#include <Simlan/Simlan.hpp>
-#include <Lexer/Source.hpp>
+#ifndef SIMLAN_LEXER_HPP
+#define SIMLAN_LEXER_HPP
 
-namespace Simlan {
+#include <Simlan/Simlan.hpp>
+#include <Lex/Source.hpp>
+
+namespace Simlan :: Lex {
     // 定义Token类型
     enum class ETokenType : uint16_t {
         S_End='\0', S_Line = '\n',
@@ -56,7 +59,7 @@ namespace Simlan {
         Token PeekToken(size_t offset=0);
         // 判断是否到达词法分析结尾
         bool IsEnd();
-    protected:
+    private:
         // 获取token，核心函数
         Token GainToken();
         // 跳过空白字符
@@ -79,3 +82,5 @@ namespace Simlan {
         bool m_WillEnd;
     };
 }
+
+#endif // ! SIMLAN_LEXER_HPP

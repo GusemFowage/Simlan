@@ -1,7 +1,8 @@
-#pragma Simlan
+#ifndef SIMLAN_LEX_SOURCE_HPP
+#define SIMLAN_LEX_SOURCE_HPP
 #include <Simlan/Simlan.hpp>
 
-namespace Simlan {
+namespace Simlan :: Lex {
     enum class ESourceType {
         Inline,
         File,
@@ -80,3 +81,5 @@ namespace Simlan {
         // bool m_AbleGet;
     };
 }
+
+#endif // ! SIMLAN_LEX_SOURCE_HPP

@@ -18,9 +18,9 @@ namespace Simlan {
     public:
         static Map<String, ESimlanKeyword> KeywordsTable;
     };
+    
     // 标准运行程序
     int SimlanMain(UnorderedSet<StringView> argv);
-
 }
 
 

@@ -6,7 +6,7 @@
 #include <cassert>
 #include <Simlan/Standard.hpp>
 
-namespace Simlan {
+namespace Simlan :: Lex {
     bool Lexer::iswhite(int c) {
         return (c == ' ' || c == '\t' || c == '\r' || c == '\n');
     }
@@ -38,7 +38,8 @@ namespace Simlan {
         return ret;
     }
     Token Lexer::PeekToken(size_t offset) {
-        assert(offset == numeric_limits<decltype(offset)>::max());
+        if (offset == numeric_limits<decltype(offset)>::max())
+            throw std::out_of_range("offset out of range");
         // 注：offset + 1 可以防止 size == 0 所导致的错误
         if (offset+1 <= Tokens.size()) {
             auto ret = Tokens.begin();

@@ -1,7 +1,8 @@
 include_directories(.)
 
+file(GLOB_RECURSE ALL_SOURCE "*.cpp" "*.c")
+file(GLOB_RECURSE ALL_HEAD "*.hpp" "*.h")
+
 add_executable(
-    simlan "main.cpp"
-    "Simlan/Standard.hpp" "Simlan/Standard.cpp"
-    "Lexer/Source.hpp" "Lexer/Source.cpp"
-    "Lexer/Lexer.hpp" "Lexer/Lexer.cpp")
+    simlan ${ALL_HEAD} ${ALL_SOURCE} 
+)

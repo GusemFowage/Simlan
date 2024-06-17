@@ -4,7 +4,7 @@
 #include "Source.hpp"
 #include <fstream>
 
-namespace Simlan {
+namespace Simlan :: Lex {
 /**
  * inline 版本: 不断输入源代码
 **/ 

@@ -37,6 +37,7 @@ namespace Simlan {
     template<typename T>
     using shared = ::std::shared_ptr<T>;
     using ::std::make_shared;
+    using ::std::static_pointer_cast;
     template<typename T>
     using unique = ::std::unique_ptr<T>;
     using ::std::make_unique;
