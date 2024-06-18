@@ -8,11 +8,15 @@
 namespace Simlan :: Check {
     template<Parse::Ast::EAstNodeType Itype>
     using Node = Parse::Ast::Node<Itype>;
-    using enum Parse::Ast::EAstNodeType;
+    
     class Checker : public Parse::Ast::Visitor {
     private:
+        Map<string, uint64_t>::iterator curval;
         List<uint64_t> stack;
         void cal(Node<Mid_Expr>::EOperator op);
+        List<Map<string, uint64_t>> vals;
+
+        using enum Parse::Ast::EAstNodeType;
     public:
         // 特化并重载 Visit 纯虚函数
         void Visit(Node<Program>& prg) override;
@@ -27,6 +31,8 @@ namespace Simlan :: Check {
         void Visit(Node<Number>& num) override;
         void Visit(Node<String>& str) override;
         void Visit(Node<Boolean>& bln) override;
+        void Visit(Node<Variable>& var) override;
+        void Visit(Node<Variable_Def>& var) override;
     };
 }
 

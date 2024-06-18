@@ -42,8 +42,8 @@ namespace Simlan {
     using unique = ::std::unique_ptr<T>;
     using ::std::make_unique;
     // string
-    using String = ::std::basic_string<char_t>;
-    using StringView = ::std::basic_string_view<char_t>;
+    using string = ::std::basic_string<char_t>;
+    using string_view = ::std::basic_string_view<char_t>;
     using ::std::getline;
     // list
     template<typename T>
@@ -55,8 +55,8 @@ namespace Simlan {
     template<typename T>
     using Vector = ::std::vector<T>;
     // map
-    template<typename K, typename V>
-    using Map = ::std::map<K, V>;
+    template<typename K, typename V, typename C = std::less<K>>
+    using Map = ::std::map<K, V, C>;
     template<typename K, typename V>
     using UnorderedMap = ::std::unordered_map<K, V>;
     // set

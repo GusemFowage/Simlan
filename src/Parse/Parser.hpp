@@ -16,7 +16,8 @@ namespace Simlan :: Parse {
     class Parser {
 // #define make_node make_shared
         using enum Ast::EAstNodeType;
-        List<Area*> AreaList;
+        List<Defarea*> AreaList;
+        TypePtr curUseType;
     public:
         Parser(Lex::Lexer &Ilexer);
         node_ptr<Program> operator()();
@@ -37,6 +38,10 @@ namespace Simlan :: Parse {
     template<>
     node_ptr<Type::Expression_Stmt> Parser::ParseNode<Type::Expression_Stmt>();
     template<>
+    node_ptr<Type::Block> Parser::ParseNode<Type::Block>();
+    template<>
+    node_ptr<Type::IfElse_Stmt> Parser::ParseNode<Type::IfElse_Stmt>();
+    template<>
     node_ptr<Type::Expression> Parser::ParseNode<Type::Expression>();
     template<>
     node_ptr<Type::Mid_Expr> Parser::ParseNode<Type::Mid_Expr>();
@@ -44,6 +49,10 @@ namespace Simlan :: Parse {
     node_ptr<Type::Primary_Expr> Parser::ParseNode<Type::Primary_Expr>();
     template<>
     node_ptr<Type::Number> Parser::ParseNode<Type::Number>();
+    template<>
+    node_ptr<Type::Variable> Parser::ParseNode<Type::Variable>();
+    template<>
+    node_ptr<Type::Variable_Def> Parser::ParseNode<Type::Variable_Def>();
 } // namespace Simlan :: Parse
 
 #endif // ! SIMLAN_PARSER_HPP

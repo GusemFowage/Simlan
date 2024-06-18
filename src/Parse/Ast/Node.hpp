@@ -12,7 +12,7 @@ namespace Simlan :: Parse :: Ast {
 
     template<>
     struct Node<EAstNodeType::Program> 
-        : public Node<EAstNodeType::Base>, public Area {
+        : public Node<EAstNodeType::Base>, public Defarea {
         void Accept(Visitor* visitor) override;
         List<nodeptr<EAstNodeType::Statement>> stmts;
     };
@@ -24,8 +24,9 @@ namespace Simlan :: Parse :: Ast {
 
     template<>
     struct Node<EAstNodeType::Block> 
-        : public Node<EAstNodeType::Statement>, public Area {
+        : public Node<EAstNodeType::Statement>, public Defarea {
         void Accept(Visitor* visitor) override;
+        List<nodeptr<EAstNodeType::Statement>> stmts;
     };
 
     template<>
@@ -37,6 +38,8 @@ namespace Simlan :: Parse :: Ast {
     template<>
     struct Node<EAstNodeType::IfElse_Stmt> : public Node<EAstNodeType::Statement> {
         void Accept(Visitor* visitor) override;
+        nodeptr<EAstNodeType::Expression> condition;
+        nodeptr<EAstNodeType::Statement> stmt, else_stmt{nullptr};
     };
 
     template<>
@@ -73,14 +76,26 @@ namespace Simlan :: Parse :: Ast {
     template<>
     struct Node<EAstNodeType::Primary_Expr> : public Node<EAstNodeType::Expression> {
         void Accept(Visitor* visitor) override;
-        nodeptr<EAstNodeType::Expression> expr;
+        nodeptr<EAstNodeType::Expression> expr {nullptr};
     };
 
     template<>
-    struct Node<EAstNodeType::Number> : public Node<EAstNodeType::Expression> {
+    struct Node<EAstNodeType::Number> : public Node<EAstNodeType::Primary_Expr> {
         void Accept(Visitor* visitor) override;
         // TODO: 使用具备类型的数据量
         uint64_t value;
+    };
+
+    template<>
+    struct Node<EAstNodeType::Variable> : public Node<EAstNodeType::Primary_Expr> {
+        void Accept(Visitor* visitor) override;
+        Defarea::SymbolTable::iterator sym_iter;
+    };
+    template<>
+    struct Node<EAstNodeType::Variable_Def> 
+        : public Node<EAstNodeType::Primary_Expr>, public Node<EAstNodeType::Statement> {
+        void Accept(Visitor* visitor) override;
+        Defarea::SymbolTable::iterator sym_iter;
     };
 }
 

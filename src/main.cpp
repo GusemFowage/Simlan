@@ -2,7 +2,7 @@
 using namespace Simlan;
 
 int main(int argc, char* argv[]) {
-    UnorderedSet<StringView> argset;
+    UnorderedSet<string_view> argset;
     for (int i = 1; i < argc; ++i) {
         argset.insert(argv[i]);
     }

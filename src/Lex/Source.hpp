@@ -12,7 +12,7 @@ namespace Simlan :: Lex {
         // 行号 列号
         size_t line, column;
         // 内容
-        StringView content;
+        string_view content;
     };
 
     class Source {
@@ -72,11 +72,11 @@ namespace Simlan :: Lex {
         // 保存源代码文件路径
         Path SrcPath;
         // 保存源代码文件内容
-        List<String> Codes;
+        List<string> Codes;
         // 保存当前行
-        List<String>::iterator m_CurLine;
+        List<string>::iterator m_CurLine;
         // 当前字符
-        String::iterator m_CurChar;
+        string::iterator m_CurChar;
         // 是否开启获取
         // bool m_AbleGet;
     };

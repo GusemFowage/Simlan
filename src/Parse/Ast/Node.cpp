@@ -30,4 +30,10 @@ namespace Simlan :: Parse :: Ast {
     void Node<EAstNodeType::Number>::Accept(Visitor *visitor) {
         visitor->Visit(*this);
     }
+    void Node<EAstNodeType::Variable>::Accept(Visitor *visitor) {
+        visitor->Visit(*this);
+    }
+    void Node<EAstNodeType::Variable_Def>::Accept(Visitor *visitor) {
+        visitor->Visit(*this);
+    }
 }

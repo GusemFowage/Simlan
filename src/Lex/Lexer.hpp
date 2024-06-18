@@ -28,7 +28,7 @@ namespace Simlan :: Lex {
         // token类型
         ETokenType type;
         // 标识符
-        String ident;
+        string ident;
         // Token() : type(ETokenType::Unkown) {}
         Token(const SourceInfo& Iinfo, ETokenType Itype = ETokenType::Unkown)
             : info(Iinfo), type(Itype) {}

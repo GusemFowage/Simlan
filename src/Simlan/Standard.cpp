@@ -8,7 +8,8 @@ using namespace std;
 #include <Check/Checker.hpp>
 
 namespace Simlan {
-    Map<String, ESimlanKeyword> Standard::KeywordsTable {
+    Map<string, ESimlanKeyword> Standard::KeywordsTable {
+        {"var", ESimlanKeyword::Var},
         {"if", ESimlanKeyword::If},
         {"else", ESimlanKeyword::Else},
         {"while", ESimlanKeyword::While},
@@ -30,7 +31,7 @@ namespace Test {
         using namespace Lex;
         auto source {
             make_shared<SourceImpl<ESourceType::File>>
-            ("/home/maker/project/Simlan/test/test.sn")
+            ("../demo/lexer.sn")
         };  
         Lexer lex(source);
         while (!lex.IsEnd()) {
@@ -62,7 +63,7 @@ namespace Test {
     }
 }
 
-    int SimlanMain(UnorderedSet<StringView> argv) {
+    int SimlanMain(UnorderedSet<string_view> argv) {
         if (argv.count("--test")) {
             Test::testSimlan();
             return 0;
@@ -82,7 +83,7 @@ namespace Test {
             };  // 获取源代码
             Lex::Lexer lexer(source);  // 词法分析器
             Parse::Parser parser(lexer);  // 语法分析器
-            Check::Checker checker;  // 语义分析器
+            Check::Checker checker;  // 语义分析器 (语义查看)
             while (!lexer.IsEnd()) {
             // TODO: parse 
             // TODO: code generation

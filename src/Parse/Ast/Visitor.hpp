@@ -12,6 +12,7 @@ namespace Simlan :: Parse :: Ast {
         IfElse_Stmt, While_Stmt, For_Stmt,
         Expression_Stmt,
         Assign_Expr, Mid_Expr, Primary_Expr, 
+        Variable, Variable_Def,
         Number, String, Boolean,
     };
     // 观察者
@@ -40,6 +41,8 @@ namespace Simlan :: Parse :: Ast {
         virtual void Visit(Node<Mid_Expr>& mid_expr) = 0;
         virtual void Visit(Node<Assign_Expr>& ass) = 0;
         virtual void Visit(Node<Primary_Expr>& primary_expr) = 0;
+        virtual void Visit(Node<Variable>& var) = 0;
+        virtual void Visit(Node<Variable_Def>& var) = 0;
         virtual void Visit(Node<Number>& num) = 0;
         virtual void Visit(Node<String>& str) = 0;
         virtual void Visit(Node<Boolean>& boolean) = 0;

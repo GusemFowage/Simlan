@@ -16,18 +16,24 @@ namespace Simlan {
         // TODO: type definition
     };
 
-    class TableOfType {
-        using TypePtr = shared<Type<EType::Auto>>;
-    private:
-        static UnorderedMap<String, TypePtr> StandardType;
-        UnorderedMap<String, TypePtr> table;
-    public:
-        void add(const String& name, const Type<EType::Auto>& type);
-        TypePtr operator[](const String& name) ;
+    template<>
+    struct Type<EType::Number>
+        : public Type<EType::Auto> {
     };
 
-    struct Area {
-        UnorderedMap<String, shared<Type<EType::Auto>>> Symbols;
+    using TypePtr = shared<Type<EType::Auto>>;
+    class TableOfType {
+    private:
+        static UnorderedMap<string, TypePtr> StandardType;
+        UnorderedMap<string, TypePtr> table;
+    public:
+        void add(const string& name, const Type<EType::Auto>& type);
+        TypePtr operator[](const string& name) ;
+    };
+
+    struct Defarea {
+        using SymbolTable = UnorderedMap<string, shared<Type<EType::Auto>>>;
+        SymbolTable Symbols;
         TableOfType TypeTable;
     };
 } // namespace Simlan

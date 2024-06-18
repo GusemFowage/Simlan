@@ -6,6 +6,7 @@
 namespace Simlan {
     enum class ESimlanKeyword : uint8_t {
         // 关键字枚举
+        Var, Const,
         If, Else,
         While, For, Keep, Until,
         Break, Continue,
@@ -16,11 +17,11 @@ namespace Simlan {
     // 定义标准
     class Standard {
     public:
-        static Map<String, ESimlanKeyword> KeywordsTable;
+        static Map<string, ESimlanKeyword> KeywordsTable;
     };
     
     // 标准运行程序
-    int SimlanMain(UnorderedSet<StringView> argv);
+    int SimlanMain(UnorderedSet<string_view> argv);
 }
 
 
