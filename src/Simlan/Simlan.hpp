@@ -73,4 +73,6 @@ namespace Simlan {
     using size_t = unsigned long long;
 }
 
+constexpr bool DEBUG_MODE = true;
+
 #endif

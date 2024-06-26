@@ -6,7 +6,7 @@
 namespace Simlan {
     enum class ESimlanKeyword : uint8_t {
         // 关键字枚举
-        Var, Const,
+        Var, Const, Fnc,
         If, Else,
         While, For, Keep, Until,
         Break, Continue,

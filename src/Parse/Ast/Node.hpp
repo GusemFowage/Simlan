@@ -45,11 +45,15 @@ namespace Simlan :: Parse :: Ast {
     template<>
     struct Node<EAstNodeType::While_Stmt> : public Node<EAstNodeType::Statement> {
         void Accept(Visitor* visitor) override;
+        nodeptr<EAstNodeType::Expression> condition;
+        nodeptr<EAstNodeType::Statement> body;
     };
 
     template<>
     struct Node<EAstNodeType::For_Stmt> : public Node<EAstNodeType::Statement> {
         void Accept(Visitor* visitor) override;
+        nodeptr<EAstNodeType::Expression> init, condition, increment;
+        nodeptr<EAstNodeType::Statement> body;
     };
 
     template<>
@@ -85,7 +89,6 @@ namespace Simlan :: Parse :: Ast {
         // TODO: 使用具备类型的数据量
         uint64_t value;
     };
-
     template<>
     struct Node<EAstNodeType::Variable> : public Node<EAstNodeType::Primary_Expr> {
         void Accept(Visitor* visitor) override;
@@ -97,6 +100,24 @@ namespace Simlan :: Parse :: Ast {
         void Accept(Visitor* visitor) override;
         Defarea::SymbolTable::iterator sym_iter;
     };
+    template<>
+    struct Node<EAstNodeType::Function_Def> 
+        : public Node<EAstNodeType::Statement>, public Defarea,
+        public Type<EType::Auto> {
+        void Accept(Visitor* visitor) override;
+        Defarea::SymbolTable::iterator sym_iter;
+        // 形参
+        List<nodeptr<EAstNodeType::Variable_Def>> args;
+        List<nodeptr<EAstNodeType::Statement>> body;
+    };
+    template<>
+    struct Node<EAstNodeType::Function> : public Node<EAstNodeType::Primary_Expr> {
+        void Accept(Visitor* visitor) override;
+        nodeptr<EAstNodeType::Function_Def> func_def;
+        // 实参
+        List<nodeptr<EAstNodeType::Expression>> args;
+    };
+    
 }
 
 #endif // ! SIMLAN_PARSE_AST_NODE_HPP

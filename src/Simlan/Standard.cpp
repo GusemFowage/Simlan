@@ -10,6 +10,7 @@ using namespace std;
 namespace Simlan {
     Map<string, ESimlanKeyword> Standard::KeywordsTable {
         {"var", ESimlanKeyword::Var},
+        {"fnc", ESimlanKeyword::Fnc},
         {"if", ESimlanKeyword::If},
         {"else", ESimlanKeyword::Else},
         {"while", ESimlanKeyword::While},
@@ -72,6 +73,7 @@ namespace Test {
             cout << "Simlan 0.0.0000.0000.24aa01" << endl;
             return 0;
         }
+        string input_file{argv.count("--sf") ? *(++argv.find("--sf")) : "../demo/parse1.sn"};
         // TODO：实现标准分流器
         // TODO: 实现语法分析器
         // TODO：实现语义分析器
@@ -79,7 +81,7 @@ namespace Test {
         try {
             auto source {
                 make_shared<Lex::SourceImpl<Lex::ESourceType::File>>
-                ("../demo/parse1.sn")
+                (input_file)
             };  // 获取源代码
             Lex::Lexer lexer(source);  // 词法分析器
             Parse::Parser parser(lexer);  // 语法分析器

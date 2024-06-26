@@ -15,7 +15,7 @@ namespace Simlan :: Lex {
         S_Equal='=', S_Greater='>', S_Less='<',S_Question='?',
         S_Exclamation='!',S_Ampersand='&',S_Pipe='|',
         // 标点符号
-        S_COMMA=',', S_Colon=':', S_Semicolon=';', S_Dot='.', 
+        S_Comma=',', S_Colon=':', S_Semicolon=';', S_Dot='.', 
         // 语言相关
         L_Keyword=0x101,
         U_Identifer, U_Number, U_String,

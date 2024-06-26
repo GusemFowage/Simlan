@@ -18,15 +18,20 @@ namespace Simlan::Parse {
     }
 
     template<> node_ptr<Program> Parser::ParseNode<Program>(){
+        funcdefs.emplace_back();
         auto prg = make_node<Program>();
-#warning 暂时使用 uint64_t 作为默认变量类型
+        static_assert(DEBUG_MODE, "暂时使用 uint64_t 作为默认变量类型");
         curUseType = prg->TypeTable["uint64_t"];
         AreaList.push_back(&(*prg));
         while (lexer.PeekToken().type != Lex::ETokenType::S_End) {
-            prg->stmts.push_back(ParseNode<Statement>());
+            if (lexer.PeekToken().type != Lex::ETokenType::L_Keyword ||
+                Standard::KeywordsTable.at(lexer.PeekToken().ident) != ESimlanKeyword::Fnc) {
+                prg->stmts.push_back(ParseNode<Statement>());
+            } else ParseNode<Statement>();
         }
         ExpectToken(Lex::ETokenType::S_End);
         AreaList.pop_back();
+        funcdefs.pop_back();
         return prg;
     }
 
@@ -38,8 +43,7 @@ namespace Simlan::Parse {
         case ESimlanKeyword::Var:{
             ExpectToken(Lex::ETokenType::L_Keyword);
             auto var_def = ParseNode<Variable_Def>();
-            if (lexer.PeekToken(1).type == Lex::ETokenType::S_Equal) {
-                ExpectToken(Lex::ETokenType::U_Identifer);
+            if (lexer.PeekToken().type == Lex::ETokenType::S_Equal) {
                 ExpectToken(Lex::ETokenType::S_Equal);
                 var_def->expr = ParseNode<Expression>();
             }
@@ -49,6 +53,17 @@ namespace Simlan::Parse {
         case ESimlanKeyword::If: {
             return ParseNode<IfElse_Stmt>();
         }
+        case ESimlanKeyword::For: {
+            return ParseNode<For_Stmt>();
+        }
+        case ESimlanKeyword::While: {
+            return ParseNode<While_Stmt>();
+        }
+        case ESimlanKeyword::Fnc: {
+            ExpectToken(Lex::ETokenType::L_Keyword);
+            return ParseNode<Function_Def>();
+        }
+        case ESimlanKeyword::Keep: {}
         default:
             break;
         } else if (lexer.PeekToken().type == Lex::ETokenType::S_LBrace) {
@@ -58,8 +73,7 @@ namespace Simlan::Parse {
         return nullptr;
     }
 
-    template<>
-    node_ptr<Type::Block> Parser::ParseNode<Type::Block>() {
+    template<> node_ptr<Type::Block> Parser::ParseNode<Type::Block>() {
         auto block = make_node<Block>();
         ExpectToken(Lex::ETokenType::S_LBrace);
         AreaList.push_back(&(*block));
@@ -85,7 +99,30 @@ namespace Simlan::Parse {
         }
         return ifelse;
     }
-
+    
+    template<> node_ptr<For_Stmt> Parser::ParseNode<For_Stmt>() {
+        ExpectToken(Lex::ETokenType::L_Keyword);
+        auto for_stmt = make_node<For_Stmt>();
+        ExpectToken(Lex::ETokenType::S_LParenthesis);
+        for_stmt->init = ParseNode<Expression>();
+        ExpectToken(Lex::ETokenType::S_Semicolon);
+        for_stmt->condition = ParseNode<Expression>();
+        ExpectToken(Lex::ETokenType::S_Semicolon);
+        for_stmt->increment = ParseNode<Expression>();
+        ExpectToken(Lex::ETokenType::S_RParenthesis);
+        for_stmt->body = ParseNode<Statement>();
+        return for_stmt;
+    }
+    
+    template<> node_ptr<While_Stmt> Parser::ParseNode<While_Stmt>() {
+        ExpectToken(Lex::ETokenType::L_Keyword);
+        auto while_stmt = make_node<While_Stmt>();
+        ExpectToken(Lex::ETokenType::S_LParenthesis);
+        while_stmt->condition = ParseNode<Expression>();
+        ExpectToken(Lex::ETokenType::S_RParenthesis);
+        while_stmt->body = ParseNode<Statement>();
+        return while_stmt;
+    }
     template<> node_ptr<Expression_Stmt> Parser::ParseNode<Expression_Stmt>() {
         auto expr_stmt = make_node<Expression_Stmt>();
         expr_stmt->expr = ParseNode<Expression>();
@@ -214,8 +251,12 @@ namespace Simlan::Parse {
         switch (lexer.PeekToken().type) {
         case Lex::ETokenType::U_Number:
             return ParseNode<Number>();
-        case Lex::ETokenType::U_Identifer:
-            return ParseNode<Variable>();
+        case Lex::ETokenType::U_Identifer: {
+            if (lexer.PeekToken(1).type == Lex::ETokenType::S_LParenthesis) {
+                return ParseNode<Function>();
+            } else return ParseNode<Variable>();
+        }
+            
         case Lex::ETokenType::S_LParenthesis: {
             auto prmy = make_node<Primary_Expr>();
             ExpectToken(Lex::ETokenType::S_LParenthesis);
@@ -262,8 +303,52 @@ namespace Simlan::Parse {
         }
         AreaList.back()->Symbols[lexer.PeekToken().ident] = curUseType;
         var_def->sym_iter = AreaList.back()->Symbols.find(lexer.PeekToken().ident);
-        // ExpectToken(Lex::ETokenType::U_Identifer);
+        ExpectToken(Lex::ETokenType::U_Identifer);
         return var_def;
+    }
+
+    template<>
+    node_ptr<Type::Function> Parser::ParseNode<Type::Function>() {
+        auto func = make_node<Type::Function>();
+        func->func_def = funcdefs.back().find(lexer.PeekToken().ident)->second;
+        ExpectToken(Lex::ETokenType::U_Identifer);
+        ExpectToken(Lex::ETokenType::S_LParenthesis);
+        while (lexer.PeekToken().type != Lex::ETokenType::S_RParenthesis) {
+            func->args.push_back(ParseNode<Expression>());
+            if (lexer.PeekToken().type == Lex::ETokenType::S_Comma) {
+                lexer.NextToken();
+            }
+        }
+        ExpectToken(Lex::ETokenType::S_RParenthesis);
+        return func;
+    }
+    template<>
+    node_ptr<Type::Function_Def> Parser::ParseNode<Type::Function_Def>() {
+        auto func_def = make_node<Type::Function_Def>();
+        if (AreaList.back()->Symbols.count(lexer.PeekToken().ident)) {
+            // TODO: 函数重复定义
+            throw std::runtime_error("Function redefinition: " + lexer.PeekToken().ident);
+        } 
+        AreaList.back()->Symbols[lexer.PeekToken().ident] = curUseType;
+        func_def->sym_iter = AreaList.back()->Symbols.find(lexer.PeekToken().ident);
+        funcdefs.back()[lexer.PeekToken().ident] = func_def;
+        AreaList.push_back(&(*func_def));
+        ExpectToken(Lex::ETokenType::U_Identifer);
+        ExpectToken(Lex::ETokenType::S_LParenthesis);
+        while (lexer.PeekToken().type != Lex::ETokenType::S_RParenthesis) {
+            func_def->args.push_back(ParseNode<Variable_Def>());
+            if (lexer.PeekToken().type == Lex::ETokenType::S_Comma) {
+                lexer.NextToken();
+            }
+        }
+        ExpectToken(Lex::ETokenType::S_RParenthesis);
+        ExpectToken(Lex::ETokenType::S_LBrace);
+        while (lexer.PeekToken().type != Lex::ETokenType::S_RBrace) {
+            func_def->body.push_back(ParseNode<Statement>());
+        }
+        ExpectToken(Lex::ETokenType::S_RBrace);
+        AreaList.pop_back();
+        return func_def;
     }
 
 } // namespace Simlan::Parse
