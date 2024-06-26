@@ -1,21 +1,22 @@
 #include "Typedef.hpp"
 
 namespace Simlan {
-    UnorderedMap<String, TableOfType::TypePtr> TableOfType::StandardType {
-        
+    UnorderedMap<string, TypePtr> TableOfType::StandardType {
+        {"uint64_t", make_shared<Type<EType::Number>>()},
     };
 
-    void TableOfType::add(const String &name, const Type<EType::Auto> &type){
+    void TableOfType::add(const string &name, const Type<EType::Auto> &type){
         if (table.count(name) || StandardType.count(name)) {
             // TODO: 报错：类型符号已被占用
             throw std::logic_error("Type already defined");
         }
         else table[name] = make_shared<Type<EType::Auto>>(type);
     }
-    TableOfType::TypePtr TableOfType::operator[](const String &name){
-        if (table.count(name) == 0) {
-            // TODO：报错：类型符号未定义
-            return nullptr;
-        } else return table.at(name);
+    TypePtr TableOfType::operator[](const string &name){
+        if (table.count(name)) {
+            return table.at(name);
+        } else if (StandardType.count(name)) {
+            return StandardType.at(name);
+        } else return nullptr;  // TODO: 报错：类型符号未定义
     };
 } // namespace Simlan

@@ -5,6 +5,7 @@
 #include "Lexer.hpp"
 #include <cassert>
 #include <Simlan/Standard.hpp>
+// #include <Alert/Alertor.hpp>
 
 namespace Simlan :: Lex {
     bool Lexer::iswhite(int c) {
@@ -97,7 +98,9 @@ namespace Simlan :: Lex {
             Src->NextChar();    // 跳过 '/' 此时指针指向 '*'
             while (Src->AbleGet() && (Src->NextChar() != '*' || Src->PeekChar() != '/'));
             if (!Src->AbleGet()) {
-                // TODO:错误：注释没有结束
+                // TODO: 报错
+                throw std::runtime_error("Unexpected end of file");
+                // Message({Level::ERROR,Src->GetSourceInfo(), "缺失 \'*/\' 结束注释" });
                 exit(-1);
             }
             // 此时指针指向 '/' 

@@ -1,2 +1,21 @@
-// 5 + 12 - 2 = 15
-5+4*3-2/1;
+var x = 0;
+
+fnc test(a) {
+    if (a <? 10) {
+        test(a+1);
+    }
+    x = x + a;
+}
+test(1);
+x;
+// Output: x=55
+
+for (x = 0; x <= 10; x=x+1) { }
+x;
+// Output: x=11
+
+x = 0;
+while (x <= 10)
+    x=x+1;
+x;
+// Output: x=11

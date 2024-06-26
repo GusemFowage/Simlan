@@ -7,11 +7,13 @@ namespace Simlan :: Parse :: Ast {
     // 抽象树节点类型枚举
     enum class EAstNodeType {
         Base, 
-        Program, Statement, Expression, 
+        Program, Statement, Expression, Defines,
         Block,
         IfElse_Stmt, While_Stmt, For_Stmt,
         Expression_Stmt,
         Assign_Expr, Mid_Expr, Primary_Expr, 
+        Variable, Variable_Def,
+        Function, Function_Def,
         Number, String, Boolean,
     };
     // 观察者
@@ -40,6 +42,10 @@ namespace Simlan :: Parse :: Ast {
         virtual void Visit(Node<Mid_Expr>& mid_expr) = 0;
         virtual void Visit(Node<Assign_Expr>& ass) = 0;
         virtual void Visit(Node<Primary_Expr>& primary_expr) = 0;
+        virtual void Visit(Node<Variable>& var) = 0;
+        virtual void Visit(Node<Variable_Def>& var_def) = 0;
+        virtual void Visit(Node<Function>& fnc) = 0;
+        virtual void Visit(Node<Function_Def>& fnc_def) = 0;
         virtual void Visit(Node<Number>& num) = 0;
         virtual void Visit(Node<String>& str) = 0;
         virtual void Visit(Node<Boolean>& boolean) = 0;

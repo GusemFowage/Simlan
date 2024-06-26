@@ -26,7 +26,7 @@ namespace Simlan :: Lex {
             if (!fin.is_open()) {
                 throw std::runtime_error("Failed to open file: " + SrcPath.string());
             }
-            String buff;
+            string buff;
             while (getline(fin, buff)) {
                 Codes.push_back(buff);
             }

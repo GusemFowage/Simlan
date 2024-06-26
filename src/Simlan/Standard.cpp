@@ -8,7 +8,9 @@ using namespace std;
 #include <Check/Checker.hpp>
 
 namespace Simlan {
-    Map<String, ESimlanKeyword> Standard::KeywordsTable {
+    Map<string, ESimlanKeyword> Standard::KeywordsTable {
+        {"var", ESimlanKeyword::Var},
+        {"fnc", ESimlanKeyword::Fnc},
         {"if", ESimlanKeyword::If},
         {"else", ESimlanKeyword::Else},
         {"while", ESimlanKeyword::While},
@@ -30,7 +32,7 @@ namespace Test {
         using namespace Lex;
         auto source {
             make_shared<SourceImpl<ESourceType::File>>
-            ("/home/maker/project/Simlan/test/test.sn")
+            ("../demo/lexer.sn")
         };  
         Lexer lex(source);
         while (!lex.IsEnd()) {
@@ -62,7 +64,7 @@ namespace Test {
     }
 }
 
-    int SimlanMain(UnorderedSet<StringView> argv) {
+    int SimlanMain(UnorderedSet<string_view> argv) {
         if (argv.count("--test")) {
             Test::testSimlan();
             return 0;
@@ -71,6 +73,7 @@ namespace Test {
             cout << "Simlan 0.0.0000.0000.24aa01" << endl;
             return 0;
         }
+        string input_file{argv.count("--sf") ? *(++argv.find("--sf")) : "../demo/parse1.sn"};
         // TODO：实现标准分流器
         // TODO: 实现语法分析器
         // TODO：实现语义分析器
@@ -78,11 +81,11 @@ namespace Test {
         try {
             auto source {
                 make_shared<Lex::SourceImpl<Lex::ESourceType::File>>
-                ("../demo/parse1.sn")
+                (input_file)
             };  // 获取源代码
             Lex::Lexer lexer(source);  // 词法分析器
             Parse::Parser parser(lexer);  // 语法分析器
-            Check::Checker checker;  // 语义分析器
+            Check::Checker checker;  // 语义分析器 (语义查看)
             while (!lexer.IsEnd()) {
             // TODO: parse 
             // TODO: code generation
